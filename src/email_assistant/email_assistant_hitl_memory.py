@@ -8,7 +8,7 @@ from langgraph.types import interrupt, Command
 
 from email_assistant.tools import get_tools, get_tools_by_name
 from email_assistant.tools.default.prompt_templates import HITL_MEMORY_TOOLS_PROMPT
-from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt_hitl_memory, default_triage_instructions, default_background, default_response_preferences, default_cal_preferences, MEMORY_UPDATE_INSTRUCTIONS, MEMORY_UPDATE_INSTRUCTIONS_REINFORCEMENT
+from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt_hitl_memory, default_triage_instructions, default_background, default_response_preferences, default_cal_preferences, MEMORY_UPDATE_INSTRUCTIONS, MEMORY_UPDATE_INSTRUCTIONS_REINFORCEMENT, get_language_instruction
 from email_assistant.schemas import State, RouterSchema, StateInput, UserPreferences
 from email_assistant.utils import parse_email, format_for_display, format_email_markdown
 from dotenv import load_dotenv
@@ -99,6 +99,7 @@ def triage_router(state: State, store: BaseStore) -> Command[Literal["triage_int
 
     # Format system prompt with background and triage instructions
     system_prompt = triage_system_prompt.format(
+        language_instruction=get_language_instruction("es"),
         background=default_background,
         triage_instructions=triage_instructions,
     )
@@ -235,6 +236,7 @@ def llm_call(state: State, store: BaseStore):
             llm_with_tools.invoke(
                 [
                     {"role": "system", "content": agent_system_prompt_hitl_memory.format(
+                        language_instruction=get_language_instruction("es"),
                         tools_prompt=HITL_MEMORY_TOOLS_PROMPT,
                         background=default_background,
                         response_preferences=response_preferences, 

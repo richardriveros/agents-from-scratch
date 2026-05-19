@@ -4,7 +4,7 @@ from langchain.chat_models import init_chat_model
 
 from email_assistant.tools import get_tools, get_tools_by_name
 from email_assistant.tools.default.prompt_templates import AGENT_TOOLS_PROMPT
-from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt, default_background, default_triage_instructions, default_response_preferences, default_cal_preferences
+from email_assistant.prompts import triage_system_prompt, triage_user_prompt, agent_system_prompt, default_background, default_triage_instructions, default_response_preferences, default_cal_preferences, get_language_instruction
 from email_assistant.schemas import State, RouterSchema, StateInput
 from email_assistant.utils import parse_email, format_email_markdown
 
@@ -34,6 +34,7 @@ def llm_call(state: State):
             llm_with_tools.invoke(
                 [
                     {"role": "system", "content": agent_system_prompt.format(
+                        language_instruction=get_language_instruction("es"),
                         tools_prompt=AGENT_TOOLS_PROMPT,
                         background=default_background,
                         response_preferences=default_response_preferences, 
@@ -100,8 +101,7 @@ def triage_router(state: State) -> Command[Literal["response_agent", "__end__"]]
     - Messages meant for other teams
     """
     author, to, subject, email_thread = parse_email(state["email_input"])
-    system_prompt = triage_system_prompt.format(
-        background=default_background,
+    system_prompt = triage_system_prompt.format(        language_instruction=get_language_instruction("es"),        background=default_background,
         triage_instructions=default_triage_instructions
     )
 
