@@ -9,6 +9,8 @@ from langchain_core.runnables import RunnableConfig
 @dataclass(kw_only=True)
 class Configuration:
     """Placeholder for configuration."""
+    
+    language: str = "es"  # "es" for Spanish, "en" for English
 
     @classmethod
     def from_runnable_config(

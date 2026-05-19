@@ -1,8 +1,18 @@
 from datetime import datetime
 
+# Language instructions for different languages
+LANGUAGE_INSTRUCTIONS = {
+    "es": "Haz todo el despliegue del análisis (Triage) y Responde siempre en español.\n\n",
+    "en": ""
+}
+
+def get_language_instruction(language: str = "es") -> str:
+    """Get language instruction prefix for prompts."""
+    return LANGUAGE_INSTRUCTIONS.get(language, "")
+
 # Email assistant triage prompt 
 triage_system_prompt = """
-
+{language_instruction}
 < Role >
 Your role is to triage incoming emails based upon instructs and background information below.
 </ Role >
@@ -35,7 +45,7 @@ Subject: {subject}
 
 # Email assistant prompt 
 agent_system_prompt = """
-< Role >
+{language_instruction}< Role >
 You are a top-notch executive assistant who cares about helping your executive perform as well as possible.
 </ Role >
 
@@ -72,7 +82,7 @@ When handling emails, follow these steps:
 
 # Email assistant with HITL prompt 
 agent_system_prompt_hitl = """
-< Role >
+{language_instruction}< Role >
 You are a top-notch executive assistant who cares about helping your executive perform as well as possible.
 </ Role >
 
@@ -111,7 +121,7 @@ When handling emails, follow these steps:
 # Email assistant with HITL and memory prompt 
 # Note: Currently, this is the same as the HITL prompt. However, memory specific tools (see https://langchain-ai.github.io/langmem/) can be added  
 agent_system_prompt_hitl_memory = """
-< Role >
+{language_instruction}< Role >
 You are a top-notch executive assistant. 
 </ Role >
 
@@ -238,6 +248,7 @@ RESPOND:
 - wife
 - specific questions
 - system admin notifications
+- incoming emails from: richard_riveros@yahoo.com, richardriveros@gmail.com or sistemas@bomberoscucuta.org
 NOTIFY: 
 - meeting invites
 IGNORE:
@@ -254,6 +265,7 @@ IGNORE:
 RESPOND:
 - wife
 - specific questions
+- incoming emails from: richard_riveros@yahoo.com, richardriveros@gmail.com or sistemas@bomberoscucuta.org
 NOTIFY: 
 - meeting invites
 - system admin notifications
